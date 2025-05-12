@@ -12,11 +12,11 @@ echo "
  +-+-+-+-+-+-+-+-+-+-+-+-+-+                                                                            
 "
 
-CLONED_DIR="$HOME/bspwm-setup"
+CLONED_DIR="$HOME/git/fitzland/bspwm-setup"
 CONFIG_DIR="$HOME/.config/bspwm"
 INSTALL_DIR="$HOME/installation"
-GTK_THEME="https://github.com/vinceliuice/Orchis-theme.git"
-ICON_THEME="https://github.com/vinceliuice/Colloid-icon-theme.git"
+GTK_THEME="https://github.com/vinceliuice/Matcha-gtk-theme.git"
+ICON_THEME="https://github.com/vinceliuice/Qogir-icon-theme.git"
 
 # ========================================
 # User Confirmation Before Proceeding
@@ -52,7 +52,7 @@ check_bspwm() {
         read -p "Would you like to back it up before proceeding? (y/n) " response
         if [[ "$response" =~ ^[Yy]$ ]]; then
             timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
-            backup_dir="$HOME/.config/bspwm_backup_$timestamp"
+            backup_dir="$HOME/.config/bspwm_bak_$timestamp"
             mv "$CONFIG_DIR" "$backup_dir"
             echo "Backup created at $backup_dir"
         else
@@ -80,7 +80,7 @@ setup_bspwm_config() {
 # Install required packages
 install_packages() {
     echo "Installing required packages..."
-    sudo apt-get install -y xorg xorg-dev xbacklight xbindkeys xvkbd xinput build-essential bspwm sxhkd polybar network-manager-gnome pamixer thunar thunar-archive-plugin thunar-volman lxappearance dialog mtools avahi-daemon acpi acpid gvfs-backends xfce4-power-manager pavucontrol pulsemixer feh fonts-recommended fonts-font-awesome fonts-terminus exa suckless-tools ranger redshift flameshot qimgv rofi dunst libnotify-bin xdotool unzip libnotify-dev firefox-esr geany geany-plugin-addons geany-plugin-git-changebar geany-plugin-spellcheck geany-plugin-treebrowser geany-plugin-markdown geany-plugin-insertnum geany-plugin-lineoperations geany-plugin-automark pipewire-audio nala micro xdg-user-dirs-gtk tilix lightdm || echo "Warning: Package installation failed."
+    sudo apt-get install -y xorg xorg-dev xbacklight xbindkeys xvkbd xinput build-essential bspwm sxhkd polybar network-manager-gnome pamixer thunar thunar-archive-plugin thunar-volman lxappearance dialog mtools avahi-daemon acpi acpid gvfs-backends xfce4-power-manager pavucontrol pulsemixer feh fonts-recommended fonts-font-awesome fonts-terminus exa suckless-tools ranger redshift flameshot qimgv rofi dunst libnotify-bin xdotool unzip libnotify-dev pipewire-audio nala micro xdg-user-dirs-gtk kitty lightdm || echo "Warning: Package installation failed."
     echo "Package installation completed."
 }
 
@@ -130,7 +130,7 @@ install_reqs() {
 # ========================================
 install_ftlabs_picom() {
 	if command_exists picom; then
-        echo "Picom is already installed. Skipping installation."
+        echo "Picom is already installed. Skipping."
         return
     fi
 	sudo apt-get install -y libconfig-dev libdbus-1-dev libegl-dev libev-dev libgl-dev libepoxy-dev libpcre2-dev libpixman-1-dev libx11-xcb-dev libxcb1-dev libxcb-composite0-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-glx0-dev libxcb-image0-dev libxcb-present-dev libxcb-randr0-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-util-dev libxcb-xfixes0-dev libxext-dev meson ninja-build uthash-dev
@@ -178,32 +178,6 @@ install_fastfetch() {
 	echo "Fastfetch configuration setup complete."
    
 }
-
-# ============================================
-# Install Wezterm
-# ============================================
-install_wezterm() {
-    if command_exists wezterm; then
-        echo "Wezterm is already installed. Skipping installation."
-        return
-    fi
-
-    echo "Installing Wezterm..."
-
-    WEZTERM_URL="https://github.com/wezterm/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203-110809-5046fc22.Debian12.deb"
-    TMP_DEB="/tmp/wezterm.deb"
-
-    wget -O "$TMP_DEB" "$WEZTERM_URL" || die "Failed to download Wezterm."
-    sudo apt install -y "$TMP_DEB" || die "Failed to install Wezterm."
-    rm -f "$TMP_DEB"
-
-    echo "Setting up Wezterm configuration..."
-    mkdir -p "$HOME/.config/wezterm"
-    wget -O "$HOME/.config/wezterm/wezterm.lua" "" || die "Failed to download wezterm config."
-
-    echo "Wezterm installation and configuration complete."
-}
-
 
 # ========================================
 # Font Installation
@@ -364,7 +338,6 @@ setup_user_dirs
 install_reqs
 install_ftlabs_picom
 install_fastfetch
-install_wezterm
 install_fonts
 install_theming
 change_theming
